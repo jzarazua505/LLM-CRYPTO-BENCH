@@ -68,7 +68,7 @@ git remote set-url origin https://<YOUR_GITHUB_USERNAME>@github.com/jzarazua505/
 
 GitHub passwords do NOT work for pushing.
 
-- Go to: https://github.com/settings/tokens
+- Go to: https://github.com/settings/personal-access-tokens
 - Generate a Fine-grained token
 - Give it access to the LLM-CRYPTO-BENCH repo
 - Permissions:
