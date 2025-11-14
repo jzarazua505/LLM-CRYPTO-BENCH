@@ -1,8 +1,8 @@
-LLM-CRYPTO-BENCH
+# LLM-CRYPTO-BENCH
 
 Benchmarking framework for evaluating Large Language Models (LLMs) on cryptography-related reasoning and problem-solving tasks.
 
-Project Overview
+## Project Overview
 
 This repository provides a unified environment for evaluating multiple LLMs (Gemini, LLaMA, Mixtral, GPT-OSS-20B, etc.) across three standardized cryptography datasets:
 
@@ -14,7 +14,7 @@ CyberMetric — Multiple-choice cybersecurity and privacy questions.
 
 Each dataset is processed through adapter modules, evaluated through a shared modeling interface, and scored with consistent, transparent metrics.
 
-Repository Structure
+## Repository Structure
 ```bash
 LLM-CRYPTO-BENCH/
 ├── adapters/
@@ -54,14 +54,28 @@ LLM-CRYPTO-BENCH/
 ├── .gitignore
 └── README.md
 ```
-Setup Instructions
+## Setup Instructions
 1. Clone the repository
-Create a .env file in the project root:
 ```bash
 git clone https://github.com/<username>/LLM-CRYPTO-BENCH.git
 cd LLM-CRYPTO-BENCH
 ```
-2. Install Python 3.11.10 (Required)
+2. Set your remote with your username
+```bash
+git remote set-url origin https://<YOUR_GITHUB_USERNAME>@github.com/jzarazua505/LLM-CRYPTO-BENCH.git
+```
+3. Create a GitHub Personal Access Token (PAT)
+
+GitHub passwords do NOT work for pushing.
+
+- Go to: https://github.com/settings/tokens
+- Generate a Fine-grained token
+- Give it access to the LLM-CRYPTO-BENCH repo
+- Permissions:
+  - Contents → Read and write
+  - Metadata → Read-only
+- Copy the token (you won’t see it again)
+4. Install Python 3.11.10 (Required)
 
 This project must be run using Python 3.11.10.
 
@@ -81,17 +95,17 @@ pyenv local 3.11.10
 ```
 After this step, entering the project directory will automatically activate Python 3.11.10 (due to the .python-version file).
 
-3. Create and activate the virtual environment
+4. Create and activate the virtual environment
 ```bash
 python3 -m venv venv
 source venv/bin/activate     # macOS / Linux
 venv\Scripts\activate        # Windows
 ```
-4. Install project dependencies
+6. Install project dependencies
 ```bash
 pip install -r requirements.txt
 ```
-5. Select the correct Python interpreter in VS Code
+7. Select the correct Python interpreter in VS Code
 
 VS Code will not automatically use the new environment.
 You must manually select the correct interpreter:
@@ -105,12 +119,12 @@ Python 3.11.10 ('venv')
 ```
 I should say recommended or something. Same below
 
-6. Select the correct Jupyter kernel (for the notebook)
+8. Select the correct Jupyter kernel (for the notebook)
 ```bash
 Python 3.11.10 ('venv')
 ```
 
-Creat a .env like this
+9. Creat a .env like this
 ```bash
 # ===== Keys & Model Names =====
 GEMINI_API_KEY=
