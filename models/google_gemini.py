@@ -1,6 +1,6 @@
 import os
 from typing import Any, Dict, Optional, Type
-
+from .rate_limit import build_gemini_limiter
 from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel
@@ -9,31 +9,17 @@ from pydantic import BaseModel
 load_dotenv()
 
 # Default model can be overridden via env var
-DEFAULT_GEMINI_MODEL = os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-pro")
-
-
+DEFAULT_GEMINI_MODEL = os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash-lite")
+GEMINI_LIMITER = build_gemini_limiter()
 
 def _get_api_key() -> str:
-    """
-    Resolve the Gemini API key.
-
-    Priority:
-    1. GEMINI_API_KEY (recommended; matches official docs)
-    2. GOOGLE_API_KEY (fallback if someone uses old naming)
-    """
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise RuntimeError(
-            "Missing GEMINI_API_KEY (or GOOGLE_API_KEY) in environment. "
-            "Set it in your .env or export it before running."
-        )
+        raise RuntimeError()
     return api_key
 
 
 def _get_client() -> genai.Client:
-    """
-    Create a Google GenAI client using the configured API key.
-    """
     api_key = _get_api_key()
     return genai.Client(api_key=api_key)
 
@@ -42,24 +28,31 @@ def generate_text(
     prompt: str,
     model: Optional[str] = None,
     extra_config: Optional[Dict[str, Any]] = None,
+    **gen_kwargs: Any,
 ) -> str:
-    """
-    Generate a plain text response from Gemini using the new Google GenAI SDK.
-
-    This is the primary helper for benchmark runs where we only need the
-    model's final answer as text.
-
-    :param prompt: Input prompt string.
-    :param model: Optional model name (defaults to DEFAULT_GEMINI_MODEL).
-    :param extra_config: Optional dict merged into the request `config`.
-    :return: Response text from the model.
-    """
     client = _get_client()
     model_name = model or DEFAULT_GEMINI_MODEL
 
+    # 🔒 Respect Gemini RPM (e.g., 15 RPM for Flash-Lite)
+    # Uses GEMINI_MAX_RPM env var if set, otherwise defaults to 15.
+    GEMINI_LIMITER.for_key(model_name).wait()
+
+    # Base config
     config: Dict[str, Any] = {}
     if extra_config:
         config.update(extra_config)
+
+    # Map generic kwargs into Gemini config
+    # e.g. max_tokens (our generic name) -> max_output_tokens (Gemini)
+    if "max_tokens" in gen_kwargs and "max_output_tokens" not in config:
+        config["max_output_tokens"] = gen_kwargs["max_tokens"]
+
+    # You can pass other knobs like temperature / top_p via gen_kwargs
+    # and they'll just land in config:
+    # generate_text(prompt, temperature=0.2, top_p=0.8)
+    for k, v in gen_kwargs.items():
+        # don't overwrite anything the caller explicitly set in extra_config
+        config.setdefault(k, v)
 
     response = client.models.generate_content(
         model=model_name,
@@ -86,25 +79,7 @@ def generate_json(
     model: Optional[str] = None,
     extra_config: Optional[Dict[str, Any]] = None,
 ) -> BaseModel:
-    """
-    Generate a **structured JSON** response parsed into a Pydantic model.
 
-    This is useful for consistent benchmark outputs (e.g., MCQ choice, rationale).
-
-    Example usage:
-        class Answer(BaseModel):
-            answer: str
-            reasoning: str
-
-        result = generate_json(prompt, Answer)
-        print(result.answer, result.reasoning)
-
-    :param prompt: Input prompt.
-    :param schema: Pydantic BaseModel subclass representing expected JSON shape.
-    :param model: Optional model name.
-    :param extra_config: Optional config overrides.
-    :return: An instance of `schema` parsed from the model's response.
-    """
     client = _get_client()
     model_name = model or DEFAULT_GEMINI_MODEL
 
