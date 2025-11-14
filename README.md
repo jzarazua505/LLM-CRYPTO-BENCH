@@ -117,7 +117,6 @@ You must manually select the correct interpreter:
 ```bash
 Python 3.11.10 ('venv')
 ```
-I should say recommended or something. Same below
 
 8. Select the correct Jupyter kernel (for the notebook)
 ```bash
