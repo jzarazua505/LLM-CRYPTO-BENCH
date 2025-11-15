@@ -15,6 +15,7 @@ CyberMetric — Multiple-choice cybersecurity and privacy questions.
 Each dataset is processed through adapter modules, evaluated through a shared modeling interface, and scored with consistent, transparent metrics.
 
 ## Repository Structure
+
 ```bash
 LLM-CRYPTO-BENCH/
 ├── adapters/
