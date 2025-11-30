@@ -15,6 +15,7 @@ CyberMetric — Multiple-choice cybersecurity and privacy questions.
 Each dataset is processed through adapter modules, evaluated through a shared modeling interface, and scored with consistent, transparent metrics.
 
 ## Repository Structure
+
 ```bash
 LLM-CRYPTO-BENCH/
 ├── adapters/
@@ -68,7 +69,7 @@ git remote set-url origin https://<YOUR_GITHUB_USERNAME>@github.com/jzarazua505/
 
 GitHub passwords do NOT work for pushing.
 
-- Go to: https://github.com/settings/tokens
+- Go to: https://github.com/settings/personal-access-tokens
 - Generate a Fine-grained token
 - Give it access to the LLM-CRYPTO-BENCH repo
 - Permissions:
@@ -117,7 +118,6 @@ You must manually select the correct interpreter:
 ```bash
 Python 3.11.10 ('venv')
 ```
-I should say recommended or something. Same below
 
 8. Select the correct Jupyter kernel (for the notebook)
 ```bash
@@ -153,6 +153,9 @@ OPENROUTER_RPM_MODEL_openai_gpt_oss_20b_free=10
 OPENROUTER_429_FLOOR_SECONDS=20
 OPENROUTER_429_COOLDOWN_SECONDS=60
 ```
+
+
+
 
 
 
