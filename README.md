@@ -14,6 +14,42 @@ CyberMetric — Multiple-choice cybersecurity and privacy questions.
 
 Each dataset is processed through adapter modules, evaluated through a shared modeling interface, and scored with consistent, transparent metrics.
 
+## Functionality Overview
+
+This project implements a full benchmarking pipeline for evaluating multiple LLMs on cryptography-focused datasets. Below is a clear breakdown of what works and what was not included in our final version.
+
+### Fully Working
+
+- Unified evaluation pipeline across all three datasets (CipherBench, CipherBank, CyberMetric)
+- Model interface that supports:
+  - Google Gemini API
+  - LLaMA 3.3 via OpenRouter
+  - Mistral 7B via OpenRouter
+  - GPT-OSS-20B via OpenRouter
+- CSV output and results folder for storing evaluation runs
+- Ability to run any model + dataset combination through a single Jupyter Notebook
+
+### Not Implemented
+- Unable to run the original **AICrypto datasets** against LLMs 
+
+## Academic References
+
+### Foundational Prior Work
+
+**AI-Crypto: A Comprehensive Benchmark for Evaluating Cryptography Capabilities of Large Language Models** (2024).  
+*arXiv preprint.* https://arxiv.org/abs/2507.09580
+
+This paper presents the first thorough benchmark assessing the cryptographic capabilities of large language models. AI-Crypto provides the conceptual foundation for our work and motivates the datasets and evaluation strategies used within this project.
+
+---
+
+### Contemporary Related Work Extending the Area
+
+**CipherBench: When “Competency” in Reasoning Opens the Door to Vulnerability: Jailbreaking LLMs via Novel Ciphers** (2025).  
+*arXiv preprint.* https://arxiv.org/pdf/2402.10601
+
+CipherBench evaluates LLM accuracy in decrypting classical ciphers and highlights vulnerabilities that arise from inconsistent reasoning behaviors. Our project builds on this direction by evaluating multiple models across CipherBench and two additional datasets (CipherBank and CyberMetric), positioning our results within the progression of LLM cryptographic research.
+
 ## Repository Structure
 
 ```bash
